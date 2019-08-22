@@ -1,0 +1,21 @@
+Package: vGWAS
+Type: Package
+Title: Variance Heterogeneity Genome-wide Association Study - Reimplementation
+Version: 2013.05.03
+Author: Xia Shen
+Maintainer: Kristian Ullrich <ullrich@evolbio.mpg.de>
+Description: The package reimplementation provides models and tests for variance 
+    heterogeneity genome-wide association study (vGWAS).
+License: GPL
+Encoding: UTF-8
+LazyData: true
+Depends:
+   R (>= 3.5.0)
+Imports:
+   dglm (>= 1.8.3),
+   hglm (>= 2.2-1)
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+NeedsCompilation: yes
+URL: https://github.com/kullrich/vGWAS
+RoxygenNote: 6.1.1

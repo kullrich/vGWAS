@@ -1,0 +1,138 @@
+---
+title: "vGWAS Tutorial"
+author: "Xia Shen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vGWAS Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Vignette - vGWAS Tutorial
+
+### A Brief Tutorial of the R Package vGWAS
+
+## Setup Notes
+
+To use the vGWAS package, of course, an R environment is required. Visit:
+
+http://www.r-project.org
+
+and install R for the operating system.
+
+Start R and in the R console, type the following command to install the package dependencies first:
+
+```{r}
+#install.packages("devtools")
+#install.packages("hglm")
+#install.packages("dglm")
+#library(devtools)
+#install_github("kullrich/vGWAS", build_vignettes = TRUE, dependencies = FALSE)
+```
+
+Now the package is installed in the R library.
+
+## Example
+
+Load the library in the R console, and open this vignette with the command:
+```{r}
+library(vGWAS)
+#vignette("vGWAS")
+```
+
+Six main functions in the package are ready to use:
+
+1. brown.forsythe.test
+2. vGWAS
+3. vGWAS.gc
+4. vGWAS.variance
+5. plot (S3 method for vGWAS object)
+6. summary (S3 method for vGWAS object)
+
+Run the following commands to load the example data:
+```{r}
+data(pheno)
+data(geno)
+data(chr)
+data(map)
+```
+pheno is a numeric vector of the simulated phenotypic values. By running:
+
+```{r}
+hist(pheno, breaks = 30, density = 15, col = "darkred")
+```
+
+The command:
+```{r}
+table(chr)
+```
+shows exactly the number of markers on each of the five simulated chromosomes.
+
+Now, the objects loaded in R are ready for a vGWA scan, which can be done using the single command:
+```{r}
+vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno, marker.map = map, chr.index = chr, pB = FALSE)
+#vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno, marker.map = map, chr.index = chr, pB = TRUE)
+```
+A progress bar will indicate the progress of the scan if pB is set to TRUE.
+
+When the scan is finished, all the output statistics will be returned as a list into the object vgwa, which belongs to the class ‘vGWAS’. Any object that has a structure belonging to class ‘vGWAS’ can be directly passed into S3 method function plot. For instance, simply run the following command, we can plot the results in vgwa:
+```{r}
+plot(vgwa)
+```
+
+which produces Figure 2. There is a clear peak above the Bonferroni corrected threshold (dashed orange line).
+
+Regarding the marker that gave the highest score, the heritability explained by the mean and variance can be split and calculated via:
+```{r}
+vGWAS.variance(phenotype = pheno, marker.genotype = geno[,vgwa$p.value == min(vgwa$p.value)])
+```
+
+The output can also be stored if assigning the function call to an object.
+
+To correct for population confounding, the package applies the method HEVA (h-likelihood-based efficient variance association), described in the reference paper of the package.
+
+One may input pre-calculated kinship matrix, e.g. IBD or IBS matrix, and call vGWAS with heva = TRUE, kinship = calculated.kinship.
+
+Instead, the inbuilt function vGWAS.heva automatically constructs a simple genomic kinship from the genotype data. Simply, runing:
+```{r}
+geno.coding <- matrix(0, nrow(geno), ncol(geno))
+#pb <- txtProgressBar(style = 3)
+for (j in 1:ncol(geno)) {
+       geno.coding[,j] <- as.numeric(geno[,j] == names(table(geno[,j]))[1])*2 - 1
+       #setTxtProgressBar(pb, j/ncol(geno))
+}
+image(tcrossprod(geno.coding))
+```
+
+creates a coded genotype matrix (contains -1 and 1 in this example) shown in Figure 3.
+
+vGWAS.heva provides correction for phenotype and also visualization of population stratification. When calling vGWAS.heva or vGWAS as:
+```{r}
+#vgwa2 <- vGWAS(phenotype = pheno, geno.matrix = geno.coding, heva = TRUE, marker.map = map, chr.index = chr)
+vgwa2 <- vGWAS.gc(vgwa)
+```
+
+Figure 4 is generated simultaneously with the calculation to visualize the stratification in the population via the first two principle components of the kinship matrix.
+
+
+Plotting the this object as follows will generate a new vGWAS plot in Figure 5. In this example, the difference between the vGWA results with and without HEVA correction is small, but they might differ a lot for some datasets (See the reference paper in the package).
+
+```{r}
+plot(vgwa2)
+```
+
+## Remarks
+
+The package source and further development information are on the R-Forge project page:
+https://r-forge.r-project.org/projects/vgwas/
+
+A reimplementation of vGWAS as a devtool package can be found here:
+https://github.com/kullrich/vGWAS
