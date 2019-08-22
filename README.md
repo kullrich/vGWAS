@@ -12,6 +12,7 @@ see the original publication
 
 ```
 install.packages("devtools")
+install.packages("knitr")
 install.packages("hglm")
 install.packages("dglm")
 ```
