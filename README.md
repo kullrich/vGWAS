@@ -30,3 +30,6 @@ These vignettes introduce `distIUPAC`
 
 - [01. vGWAS Tutorial](https://github.com/kullrich/vGWAS/blob/master/vignettes/vGWAS.Rmd)
 
+```
+library(vGWAS)
+vignette("vGWAS")
