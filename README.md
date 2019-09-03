@@ -1,4 +1,6 @@
 # vGWAS
+[![Build Status](https://travis-ci.com/kullrich/vGWAS.svg?branch=master)](https://travis-ci.com/kullrich/vGWAS)
+
 Variance Heterogeneity Genome-wide Association Study - Reimplementation
 =========
 This repository is a reimplementation from the original `vGWAS` R package from [Xia Shen](https://github.com/xiashen).
