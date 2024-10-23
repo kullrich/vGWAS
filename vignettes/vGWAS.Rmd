@@ -35,13 +35,14 @@ Start R and in the R console, type the following command to install the package 
 
 ```{r}
 #install.packages("devtools")
-#install.packages("hglm")
+#install.packages("knitr")
 #install.packages("dglm")
 #install.packages("doParallel")
 #install.packages("foreach")
 #install.packages("genio")
-#install.packages("onewaytests")
+#install.packages("hglm")
 #install.packages("Matrix")
+#install.packages("onewaytests")
 #library(devtools)
 #devtools::install_github("kullrich/vGWAS", build_vignettes = TRUE, dependencies = FALSE)
 ```

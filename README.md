@@ -21,13 +21,13 @@ and work on genotype data encoded as sparse matrix
 ```
 install.packages("devtools")
 install.packages("knitr")
-install.packages("hglm")
 install.packages("dglm")
 install.packages("doParallel")
 install.packages("foreach")
 install.packages("genio")
-install.packages("onewaytests")
+install.packages("hglm")
 install.packages("Matrix")
+install.packages("onewaytests")
 ```
 
 Install `vGWAS` package from [github](https://github.com/kullrich) using the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package.
@@ -40,7 +40,7 @@ devtools::install_github("kullrich/vGWAS", build_vignettes = TRUE, dependencies 
 ## Quick start
 
 ```
-library(devtools)
+library(vGWAS)
 data(pheno)
 data(geno.sparse)
 data(chr)

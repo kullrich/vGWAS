@@ -19,7 +19,7 @@ the Kruskal-Wallis ANOVA may also be applied using this function."><!-- mathjax 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">vGWAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2024.10.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2024.10.23</span>
       </span>
     </div>
 
@@ -67,7 +67,7 @@ the Kruskal-Wallis ANOVA may also be applied using this function.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">brown.forsythe.test</span><span class="op">(</span><span class="va">y</span>, <span class="va">group</span>, kruskal.test<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/pkg/vGWAS/man/bfmedian.test.html" class="external-link">brown.forsythe.test</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">group</span>, kruskal.test<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -136,7 +136,7 @@ Press.<br></p>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">geno</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">brown.forsythe.test</span><span class="op">(</span><span class="va">pheno</span>, <span class="va">geno</span><span class="op">[</span>,<span class="fl">911</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/vGWAS/man/bfmedian.test.html" class="external-link">brown.forsythe.test</a></span><span class="op">(</span><span class="va">pheno</span>, <span class="va">geno</span><span class="op">[</span>,<span class="fl">911</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Brown-Forsythe test based on the absolute deviations from the median</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
