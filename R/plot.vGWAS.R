@@ -35,7 +35,7 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr)
+#' marker.map = map, chr.index = chr, pb = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
@@ -52,38 +52,47 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom graphics abline axis mtext plot points
 #' @export
-plot.vGWAS <-
-  function(x, sig.threshold = NULL, low.log.p = 0, pch = 16, cex = .6, col.manhattan = c('slateblue4', 'olivedrab'), col.sig.threshold = 'darkgoldenrod', ...)
-  {
+plot.vGWAS <- function(
+    x,
+    sig.threshold = NULL,
+    low.log.p = 0,
+    pch = 16,
+    cex = .6,
+    col.manhattan = c('slateblue4', 'olivedrab'),
+    col.sig.threshold = 'darkgoldenrod',
+    ...) {
     tab.chr <- table(x$chromosome)
     chr <- as.numeric(names(tab.chr))
     ends <- cumsum(tab.chr)
     cumpos <- numeric(length(x$marker.map))
     cumpos[1:ends[1]] <- x$marker.map[1:ends[1]]
     logp <- -log(x$p.value, 10)
-    if (length(chr) > 1)
-    {
-      for (i in 2:length(chr))
-      {
-        cumpos[(ends[i - 1] + 1):ends[i]] <- cumpos[ends[i - 1]] + x$marker.map[(ends[i - 1] + 1):ends[i]]
+    if (length(chr) > 1) {
+      for (i in 2:length(chr)) {
+        cumpos[(ends[i - 1] + 1):ends[i]] <- cumpos[ends[i - 1]] +
+          x$marker.map[(ends[i - 1] + 1):ends[i]]
       }
     }
-    if (is.null(sig.threshold))
-    {
+    if (is.null(sig.threshold)) {
       sig.threshold <- -log(.05/length(x$marker.map), 10)
-      cat('nominal significance threshold with Bonferroni correction for', length(x$marker.map), 'tests are calculated.\n')
+      cat('nominal significance threshold with Bonferroni correction for',
+          length(x$marker.map), 'tests are calculated.\n')
     }
     cutp <- logp > low.log.p
     plot(cumpos, logp, type = 'n', ann = FALSE, axes = FALSE)
     at1 <- cumpos[1]
-    points(cumpos[(1:ends[1])[cutp[1:ends[1]]]], logp[(1:ends[1])[cutp[1:ends[1]]]], pch = pch, cex = cex, col = col.manhattan[1])
+    points(cumpos[(1:ends[1])[cutp[1:ends[1]]]],
+           logp[(1:ends[1])[cutp[1:ends[1]]]],
+           pch = pch, cex = cex, col = col.manhattan[1])
     at1 <- c(at1, cumpos[ends[1]])
     at2 <- (cumpos[1] + cumpos[ends[1]])/2
-    if (length(chr) > 1)
-    {
-      for (i in 2:length(chr))
-      {
-        points(cumpos[((ends[i - 1] + 1):ends[i])[cutp[(ends[i - 1] + 1):ends[i]]]], logp[((ends[i - 1] + 1):ends[i])[cutp[(ends[i - 1] + 1):ends[i]]]], pch = pch, cex = cex, col = col.manhattan[2 - i%%2])
+    if (length(chr) > 1) {
+      for (i in 2:length(chr)) {
+        points(cumpos[((ends[i - 1] + 1):ends[i])
+                      [cutp[(ends[i - 1] + 1):ends[i]]]],
+               logp[((ends[i - 1] + 1):ends[i])
+                    [cutp[(ends[i - 1] + 1):ends[i]]]],
+               pch = pch, cex = cex, col = col.manhattan[2 - i%%2])
         at1 <- c(at1, cumpos[ends[i]])
         at2 <- c(at2, (cumpos[ends[i - 1]] + cumpos[ends[i]])/2)
       }
@@ -94,4 +103,4 @@ plot.vGWAS <-
     mtext('Chromosome', 1, 2)
     axis(2)
     mtext(expression(-log[10]~'('~italic(P)~-value~')'), 2, 3)
-  }
+}

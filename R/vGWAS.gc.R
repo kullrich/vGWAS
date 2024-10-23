@@ -31,7 +31,7 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr)
+#' marker.map = map, chr.index = chr, pb = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
@@ -48,36 +48,44 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom graphics abline axis mtext plot points
 #' @export vGWAS.gc
-vGWAS.gc <- function(object, plot = TRUE, proportion = 1, ...)
-{
-  if (proportion > 1 || proportion <= 0)
-    stop('proportion argument should be greater then zero and less than or equal to one.')
-  ntp <- round(proportion * length(object$p.value))
-  if (ntp <= 1)
-    stop('too few valid measurments.')
-  if (ntp < 10)
-    warning(paste('number of points is fairly small:', ntp))
-  if (min(object$p.value) < 0)
-    stop('data argument has values <0')
-  if (max(object$p.value) <= 1) {
-    data <- data0 <- qchisq(object$p.value, 1, lower.tail = FALSE)
-  }
-  data <- sort(data)
-  ppoi <- ppoints(data)
-  ppoi <- sort(qchisq(1 - ppoi, 1))
-  data <- data[1:ntp]
-  ppoi <- ppoi[1:ntp]
-  s <- summary(lm(data ~ 0 + ppoi))$coeff
-  out <- object
-  out$lambda <- s[1, 1]
-  out$lambda.se <- s[1, 2]
-  if (plot) {
-    lim <- c(0, max(data, ppoi, na.rm = TRUE))
-    plot(ppoi, data, xlab = expression('Expected'~chi^2), ylab = expression('Observed'~chi^2), ...)
-    abline(a = 0, b = 1, col = 4, lwd = 2.4)
-    if (out$lambda > 1) co <- 2 else co <- 3
-    abline(a = 0, b = (s[1, 1]), col = co, lwd = 2.4)
-  }
-  out$p.value <- pchisq(data0/out$lambda, 1, lower.tail = FALSE)
-  return(out)
+vGWAS.gc <- function(
+    object,
+    plot = TRUE,
+    proportion = 1,
+    ...) {
+    if (proportion > 1 || proportion <= 0) {
+        stop('proportion argument should be greater then zero and less than or equal to one.')
+    }
+    ntp <- round(proportion * length(object$p.value))
+    if (ntp <= 1) {
+        stop('too few valid measurments.')
+    }
+    if (ntp < 10) {
+        warning(paste('number of points is fairly small:', ntp))
+    }
+    if (min(object$p.value) < 0) {
+        stop('data argument has values <0')
+    }
+    if (max(object$p.value) <= 1) {
+        data <- data0 <- qchisq(object$p.value, 1, lower.tail = FALSE)
+    }
+    data <- sort(data)
+    ppoi <- ppoints(data)
+    ppoi <- sort(qchisq(1 - ppoi, 1))
+    data <- data[1:ntp]
+    ppoi <- ppoi[1:ntp]
+    s <- summary(lm(data ~ 0 + ppoi))$coeff
+    out <- object
+    out$lambda <- s[1, 1]
+    out$lambda.se <- s[1, 2]
+    if (plot) {
+        lim <- c(0, max(data, ppoi, na.rm = TRUE))
+        plot(ppoi, data, xlab = expression('Expected'~chi^2),
+            ylab = expression('Observed'~chi^2), ...)
+        abline(a = 0, b = 1, col = 4, lwd = 2.4)
+        if (out$lambda > 1) co <- 2 else co <- 3
+        abline(a = 0, b = (s[1, 1]), col = co, lwd = 2.4)
+    }
+    out$p.value <- pchisq(data0/out$lambda, 1, lower.tail = FALSE)
+    return(out)
 }

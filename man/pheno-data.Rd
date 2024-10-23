@@ -5,8 +5,10 @@
 \alias{pheno-data}
 \alias{pheno}
 \title{Phenotypic Values for The Markers of The Simulated Data}
-\format{A numeric vector of the phenotypic values of 93 simulated
-individuals.}
+\format{
+A numeric vector of the phenotypic values of 93 simulated
+individuals.
+}
 \usage{
 data(pheno)
 }

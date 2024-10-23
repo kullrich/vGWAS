@@ -1,7 +1,8 @@
-pandoc: 2.3.1
-pkgdown: 1.5.1
+pandoc: 3.1.1
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   vGWAS: vGWAS.html
-last_built: 2020-04-15T18:58Z
+  vGWASsparse: vGWASsparse.html
+last_built: 2024-10-23T18:53Z
 

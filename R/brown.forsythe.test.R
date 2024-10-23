@@ -21,10 +21,14 @@
 #' \item{method}{type of test performed.}
 #' \item{data.name}{a character string giving the name of the data.}
 #' @note Modified from the \code{lawstat} package.
-#' @references Brown, M. B. and Forsythe, A.B. (1974). \bold{Robust tests for equality of
-#' variances.} \emph{Journal of the American Statistical Association}, \bold{69}, 364-367.\cr
-#' @references Levene, H. (1960). \bold{Robust Tests for Equality of Variances}, \emph{in Contributions
-#' to Probability and Statistics}, ed. I. Olkin, Palo Alto, CA: Stanford Univ. Press.\cr
+#' @references Brown, M. B. and Forsythe, A.B. (1974). \bold{Robust tests for
+#' equality of variances.}
+#' \emph{Journal of the American Statistical Association},
+#' \bold{69}, 364-367.\cr
+#' @references Levene, H. (1960).
+#' \bold{Robust Tests for Equality of Variances}, \emph{in Contributions
+#' to Probability and Statistics}, ed. I. Olkin, Palo Alto, CA: Stanford Univ.
+#' Press.\cr
 #' @examples
 #' data(pheno)
 #' data(geno)
@@ -35,13 +39,13 @@
 #' @importFrom stats anova lm median pchisq ppoints qchisq sd
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom graphics abline axis mtext plot points
-brown.forsythe.test <-
-  function(y, group, kruskal.test = FALSE)
-  {
+brown.forsythe.test <- function(
+    y,
+    group,
+    kruskal.test = FALSE) {
     # ----- stop the code if the length of y does not match the length of group ----- #
-    if (length(y) != length(group))
-    {
-      stop('The length of the data does not match the length of the group.')
+    if (length(y) != length(group)) {
+        stop('The length of the data does not match the length of the group.')
     }
     # ----- assign stuffs ----- #
     DNAME <- deparse(substitute(y))
@@ -63,21 +67,22 @@ brown.forsythe.test <-
     # ----- set d ----- #
     d <- group
     # ----- if the Kruskal-Wallis test is not used ----- #
-    if (kruskal.test == FALSE)
-    {
-      statistic <- anova(lm(resp.mean ~ d))[1, 4]
-      p.value <- anova(lm(resp.mean ~ d))[1, 5]
-    }
+    if (kruskal.test == FALSE) {
+        statistic <- anova(lm(resp.mean ~ d))[1, 4]
+        p.value <- anova(lm(resp.mean ~ d))[1, 5]
+    } else {
     # ----- if the Kruskal-Wallis test is used ----- #
-    else
-    {
-      METHOD <- paste('Rank-based (Kruskal-Wallis)', METHOD)
-      ktest <- kruskal.test(resp.mean,d)
-      statistic <- ktest$statistic
-      p.value <- ktest$p.value
+        METHOD <- paste('Rank-based (Kruskal-Wallis)', METHOD)
+        ktest <- kruskal.test(resp.mean,d)
+        statistic <- ktest$statistic
+        p.value <- ktest$p.value
     }
     # ----- display output ----- #
     STATISTIC <- statistic
     names(STATISTIC) = 'Test Statistic'
-    structure(list(statistic = STATISTIC, p.value = p.value, method = METHOD, data.name = DNAME), class = 'htest')
-  }
+    structure(list(
+        statistic = STATISTIC,
+        p.value = p.value,
+        method = METHOD,
+        data.name = DNAME), class = 'htest')
+}

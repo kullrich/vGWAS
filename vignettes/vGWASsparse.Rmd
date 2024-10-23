@@ -1,0 +1,66 @@
+---
+title: "vGWAS plink tutorial"
+author: "Kristian Ullrich"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: vGWAS.bib
+vignette: >
+  %\VignetteIndexEntry{vGWAS plink tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Vignette - vGWAS plink tutorial
+
+### A Brief Tutorial of the R Package vGWAS using sparse genotype data
+
+## Setup Notes
+
+To use the vGWAS package, of course, an R environment is required. Visit:
+
+http://www.r-project.org
+
+and install R for the operating system.
+
+Start R and in the R console, type the following command to install the package dependencies first:
+
+```{r}
+#install.packages("devtools")
+#install.packages("hglm")
+#install.packages("dglm")
+#install.packages("doParallel")
+#install.packages("foreach")
+#install.packages("genio")
+#install.packages("onewaytests")
+#install.packages("Matrix")
+#library(devtools)
+#devtools::install_github("kullrich/vGWAS", build_vignettes = TRUE, dependencies = FALSE)
+```
+
+Now the package is installed in the R library.
+
+## Example
+
+It is assumed that genotype data is encoded as follows:
+
+0: Homozygous ref allele
+1: Heterozygous
+2: Homozygous alt allele
+
+Pre-processing can be done with e.g. 
+
+## Remarks
+
+The package source and further development information are on the R-Forge project page:
+https://r-forge.r-project.org/projects/vgwas/
+
+A reimplementation of `vGWAS` introducing the parallel function `vGWASparallel`
+as a devtool package can be found here:
+https://github.com/kullrich/vGWAS

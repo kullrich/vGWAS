@@ -47,7 +47,7 @@ data(chr)
 data(map)
 # ----- variance GWA scan ----- #
 vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-marker.map = map, chr.index = chr)
+marker.map = map, chr.index = chr, pb = FALSE)
 # ----- visualize the scan ----- #
 plot(vgwa)
 summary(vgwa)

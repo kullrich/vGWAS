@@ -38,7 +38,7 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr)
+#' marker.map = map, chr.index = chr, pb = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
@@ -55,14 +55,17 @@
 #' @importFrom graphics abline axis mtext plot points
 #' @author Xia Shen
 #' @export vGWAS
-vGWAS <-
-  function(phenotype, geno.matrix, kruskal.test = FALSE, marker.map = NULL, chr.index = NULL, pB = TRUE)
-  {
+vGWAS <- function(
+    phenotype,
+    geno.matrix,
+    kruskal.test = FALSE,
+    marker.map = NULL,
+    chr.index = NULL,
+    pB = TRUE) {
     Call <- match.call()
     # ----- check phenotype ----- #
-    if (!is.numeric(phenotype) & !is.logical(phenotype))
-    {
-      stop('phenotype has to be numeric or logical.')
+    if (!is.numeric(phenotype) & !is.logical(phenotype)) {
+        stop('phenotype has to be numeric or logical.')
     }
     #if (heva)
     #{
@@ -74,71 +77,62 @@ vGWAS <-
     n <- length(phenotype)
     m <- ncol(geno.matrix)
     # ----- check genotypes ----- #
-    if (!is.matrix(geno.matrix) & !is.data.frame(geno.matrix))
-    {
-      stop('geno.matrix has to be a matrix or a data frame.')
+    if (!is.matrix(geno.matrix) & !is.data.frame(geno.matrix)) {
+        stop('geno.matrix has to be a matrix or a data frame.')
     }
     # ----- check if data sizes match ----- #
-    if (n != nrow(geno.matrix))
-    {
-      stop('size of phenotype and geno.matrix do not match.')
+    if (n != nrow(geno.matrix)) {
+        stop('size of phenotype and geno.matrix do not match.')
     }
-    if (!is.null(chr.index))
-    {
-      if (m != length(chr.index))
-      {
-        stop('size of chr.index and geno.matrix do not match.')
-      }
+    if (!is.null(chr.index)) {
+        if (m != length(chr.index)) {
+            stop('size of chr.index and geno.matrix do not match.')
+        }
+    } else {
+        chr.index <- rep(1, m)
     }
-    else
-    {
-      chr.index <- rep(1, m)
-    }
-    if (!is.null(marker.map))
-    {
-      if (m != length(marker.map))
-      {
-        stop('size of marker.map and geno.matrix do not match.')
-      }
-    }
-    else
-    {
-      tab.chr <- table(chr.index)
-      marker.map <- c()
-      for (i in 1:length(tab.chr)) {
-        marker.map <- c(marker.map, 1:tab.chr[i])
-      }
+    if (!is.null(marker.map)) {
+        if (m != length(marker.map)) {
+            stop('size of marker.map and geno.matrix do not match.')
+        }
+    } else {
+        tab.chr <- table(chr.index)
+        marker.map <- c()
+        for (i in 1:length(tab.chr)) {
+          marker.map <- c(marker.map, 1:tab.chr[i])
+        }
     }
     # ----- preallocation ----- #
     p.values <- statistics <- numeric(m)
-    if(pB){
-      pb <- txtProgressBar(style = 3)
+    if (pB) {
+        pb <- txtProgressBar(style = 3)
     }
     # ----- scan using Brown-Forsythe test -----#
-    for (j in 1:m)
-    {
-      #  if (!heva) {
-      test <- try(brown.forsythe.test(phenotype, as.factor(geno.matrix[,j]), kruskal.test = kruskal.test), silent  = TRUE)
-      #  } else {
-      #   test <- try(wilcox.test(phenotype ~ as.factor(geno.matrix[,j])), silent  = TRUE)
-      #  }
-      if (!inherits(test, 'try-error'))
-      {
-        p.values[j] <- test$p.value
-        statistics[j] <- test$statistic
-      }
-      else
-      {
-        p.values[j] <- 1
-        statistics[j] <- 0
-      }
-      if(pB){
-        setTxtProgressBar(pb, j/m)
-      }
+    for (j in 1:m) {
+        #  if (!heva) {
+        test <- try(brown.forsythe.test(phenotype, as.factor(geno.matrix[,j]), kruskal.test = kruskal.test), silent  = TRUE)
+        #  } else {
+        #   test <- try(wilcox.test(phenotype ~ as.factor(geno.matrix[,j])), silent  = TRUE)
+        #  }
+        if (!inherits(test, 'try-error')) {
+            p.values[j] <- test$p.value
+            statistics[j] <- test$statistic
+        } else {
+            p.values[j] <- 1
+            statistics[j] <- 0
+        }
+        if (pB) {
+            setTxtProgressBar(pb, j/m)
+        }
     }
     cat('\n')
     marker.names <- names(as.data.frame(geno.matrix))
-    res <- data.frame(marker = marker.names, chromosome = chr.index, marker.map = marker.map, statistic = statistics, p.value = p.values)
+    res <- data.frame(
+        marker = marker.names,
+        chromosome = chr.index,
+        marker.map = marker.map,
+        statistic = statistics,
+        p.value = p.values)
     class(res) <- 'vGWAS'
     return(res)
-  }
+}

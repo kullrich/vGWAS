@@ -5,8 +5,10 @@
 \alias{geno-data}
 \alias{geno}
 \title{The Marker Genotypes of The Simulated Data}
-\format{A character matrix of size (number of individuals)
-times (number of markers in the genome).}
+\format{
+A character matrix of size (number of individuals)
+times (number of markers in the genome).
+}
 \usage{
 data(geno)
 }

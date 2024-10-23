@@ -5,8 +5,10 @@
 \alias{map-data}
 \alias{map}
 \title{Map Positions for The Markers of The Simulated Data}
-\format{A numeric vector of chromosomal map positions of the 20K
-simulated markers.}
+\format{
+A numeric vector of chromosomal map positions of the 20K
+simulated markers.
+}
 \usage{
 data(map)
 }

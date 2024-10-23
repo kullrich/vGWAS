@@ -1,10 +1,13 @@
 ---
-title: "vGWAS Tutorial"
-author: "Xia Shen"
+title: "vGWAS basic tutorial"
+author:
+ - "Xia Shen"
+ - "Kristian Ullrich^[Max Planck Institute For Evolutionary Biology, ullrich@evolbio.mpg.de]"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: vGWAS.bib
 vignette: >
-  %\VignetteIndexEntry{vGWAS Tutorial}
+  %\VignetteIndexEntry{vGWAS basic tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Vignette - vGWAS Tutorial
+## Vignette - vGWAS basic tutorial
 
 ### A Brief Tutorial of the R Package vGWAS
 
@@ -34,8 +37,13 @@ Start R and in the R console, type the following command to install the package 
 #install.packages("devtools")
 #install.packages("hglm")
 #install.packages("dglm")
+#install.packages("doParallel")
+#install.packages("foreach")
+#install.packages("genio")
+#install.packages("onewaytests")
+#install.packages("Matrix")
 #library(devtools)
-#install_github("kullrich/vGWAS", build_vignettes = TRUE, dependencies = FALSE)
+#devtools::install_github("kullrich/vGWAS", build_vignettes = TRUE, dependencies = FALSE)
 ```
 
 Now the package is installed in the R library.
@@ -45,17 +53,19 @@ Now the package is installed in the R library.
 Load the library in the R console, and open this vignette with the command:
 ```{r}
 library(vGWAS)
-#vignette("vGWAS")
 ```
 
-Six main functions in the package are ready to use:
+Nine main functions in the package are ready to use:
 
-1. brown.forsythe.test
-2. vGWAS
-3. vGWAS.gc
-4. vGWAS.variance
-5. plot (S3 method for vGWAS object)
-6. summary (S3 method for vGWAS object)
+1. bfmedian.test
+2. brown.forsythe.tes
+3. getMAF
+4. vGWAS
+5. vGWASparallel
+6. vGWAS.gc
+7. vGWAS.variance
+8. plot (S3 method for vGWAS object)
+9. summary (S3 method for vGWAS object)
 
 Run the following commands to load the example data:
 ```{r}
@@ -76,12 +86,44 @@ table(chr)
 ```
 shows exactly the number of markers on each of the five simulated chromosomes.
 
+To pre-filter the `geno.matrix` data for minor-allele-frequency, use the
+`getMAF` function as follows:
+```{r}
+data(geno)
+dim(geno)
+maf <- getMAF(geno.matrix = geno, geno.snp = "col")
+geno.maf <- geno[, maf > 0.05]
+dim(geno.maf)
+chr.maf <- chr[maf > 0.05]
+map.maf <- map[maf > 0.05]
+```
+
 Now, the objects loaded in R are ready for a vGWA scan, which can be done using the single command:
 ```{r}
-vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno, marker.map = map, chr.index = chr, pB = FALSE)
-#vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno, marker.map = map, chr.index = chr, pB = TRUE)
+vgwa <- vGWAS(
+  phenotype = pheno,
+  geno.matrix = geno,
+  marker.map = map,
+  chr.index = chr,
+  pB = FALSE)
 ```
 A progress bar will indicate the progress of the scan if pB is set to TRUE.
+
+The same can be run using multiple cores.
+
+__Note:__ using the `vGWASparallel` function one need to specify, if the SNPs
+in the `geno.matrix` are at columns (`geno.snp = "col"`)
+or at rows (`geno.snp = "row"`)
+```{r}
+#vgwa <- vGWASparallel(
+#  phenotype = pheno,
+#  geno.matrix = geno,
+#  geno.snp = "col",
+#  marker.map = map,
+#  chr.index = chr,
+#  pB = FALSE,
+#  ncores = 2)
+```
 
 When the scan is finished, all the output statistics will be returned as a list into the object vgwa, which belongs to the class ‘vGWAS’. Any object that has a structure belonging to class ‘vGWAS’ can be directly passed into S3 method function plot. For instance, simply run the following command, we can plot the results in vgwa:
 ```{r}
@@ -92,47 +134,20 @@ which produces Figure 2. There is a clear peak above the Bonferroni corrected th
 
 Regarding the marker that gave the highest score, the heritability explained by the mean and variance can be split and calculated via:
 ```{r}
-vGWAS.variance(phenotype = pheno, marker.genotype = geno[,vgwa$p.value == min(vgwa$p.value)])
+# get marker with lowest p.value
+marker.lowest <- vgwa$p.value == min(vgwa$p.value)
+vGWAS.variance(
+  phenotype = pheno,
+  marker.genotype = geno[, marker.lowest])
 ```
 
 The output can also be stored if assigning the function call to an object.
-
-To correct for population confounding, the package applies the method HEVA (h-likelihood-based efficient variance association), described in the reference paper of the package.
-
-One may input pre-calculated kinship matrix, e.g. IBD or IBS matrix, and call vGWAS with heva = TRUE, kinship = calculated.kinship.
-
-Instead, the inbuilt function vGWAS.heva automatically constructs a simple genomic kinship from the genotype data. Simply, runing:
-```{r}
-geno.coding <- matrix(0, nrow(geno), ncol(geno))
-#pb <- txtProgressBar(style = 3)
-for (j in 1:ncol(geno)) {
-       geno.coding[,j] <- as.numeric(geno[,j] == names(table(geno[,j]))[1])*2 - 1
-       #setTxtProgressBar(pb, j/ncol(geno))
-}
-image(tcrossprod(geno.coding))
-```
-
-creates a coded genotype matrix (contains -1 and 1 in this example) shown in Figure 3.
-
-vGWAS.heva provides correction for phenotype and also visualization of population stratification. When calling vGWAS.heva or vGWAS as:
-```{r}
-#vgwa2 <- vGWAS(phenotype = pheno, geno.matrix = geno.coding, heva = TRUE, marker.map = map, chr.index = chr)
-vgwa2 <- vGWAS.gc(vgwa)
-```
-
-Figure 4 is generated simultaneously with the calculation to visualize the stratification in the population via the first two principle components of the kinship matrix.
-
-
-Plotting the this object as follows will generate a new vGWAS plot in Figure 5. In this example, the difference between the vGWA results with and without HEVA correction is small, but they might differ a lot for some datasets (See the reference paper in the package).
-
-```{r}
-plot(vgwa2)
-```
 
 ## Remarks
 
 The package source and further development information are on the R-Forge project page:
 https://r-forge.r-project.org/projects/vgwas/
 
-A reimplementation of vGWAS as a devtool package can be found here:
+A reimplementation of `vGWAS` introducing the parallel function `vGWASparallel`
+as a devtool package can be found here:
 https://github.com/kullrich/vGWAS

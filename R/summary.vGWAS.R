@@ -29,7 +29,7 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr)
+#' marker.map = map, chr.index = chr, pb = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
@@ -46,17 +46,21 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom graphics abline axis mtext plot points
 #' @export
-summary.vGWAS <- function(object, nrMarkers = 10, ...){
-  if(!class(object) == "vGWAS"){
-    stop("data has to be of class: vGWAS")
-  }
-  pSort <- sort(object$p.value, index.return=T)
-  topMarkers <- pSort$ix[1:nrMarkers]
-  Pval <- object$p.value[topMarkers]
-  chr <- object$chromosome[topMarkers]
-  marker <- object$marker[topMarkers]
-  map <- object$marker.map[topMarkers]
-  result <- data.frame(marker, chr, map, Pval)
-  print(paste("Top ", nrMarkers,  " markers, sorted by p-value:", sep=""), quote=F)
-  result
+summary.vGWAS <- function(
+    object,
+    nrMarkers = 10,
+    ...) {
+    if(!class(object) == "vGWAS"){
+        stop("data has to be of class: vGWAS")
+    }
+    pSort <- sort(object$p.value, index.return=T)
+    topMarkers <- pSort$ix[1:nrMarkers]
+    Pval <- object$p.value[topMarkers]
+    chr <- object$chromosome[topMarkers]
+    marker <- object$marker[topMarkers]
+    map <- object$marker.map[topMarkers]
+    result <- data.frame(marker, chr, map, Pval)
+    print(paste("Top ", nrMarkers,
+        " markers, sorted by p-value:", sep=""), quote=F)
+    result
 }

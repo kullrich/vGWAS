@@ -40,7 +40,7 @@ data(chr)
 data(map)
 # ----- variance GWA scan ----- #
 vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-marker.map = map, chr.index = chr)
+marker.map = map, chr.index = chr, pb = FALSE)
 # ----- visualize the scan ----- #
 plot(vgwa)
 summary(vgwa)
@@ -56,7 +56,8 @@ variance-controlling genes in \emph{Arabidopsis thaliana}}.
 \emph{PLoS Genetics}, \bold{8}, e1002839.\cr
 }
 \seealso{
-\code{\link{package-vGWAS}}, \code{\link{vGWAS}}, \code{\link{plot.vGWAS}}
+\code{\link{package-vGWAS}},
+\code{\link{vGWAS}}, \code{\link{plot.vGWAS}}
 }
 \author{
 Xia Shen

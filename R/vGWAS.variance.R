@@ -18,7 +18,8 @@
 #' @return
 #' \item{variance.mean}{the variance explained by the mean part of model.}
 #' \item{variance.disp}{the variance explained by the variance part of model.}
-#' @seealso \code{\link{package-vGWAS}}, \code{\link{vGWAS}}, \code{\link{plot.vGWAS}}
+#' @seealso \code{\link{package-vGWAS}},
+#' \code{\link{vGWAS}}, \code{\link{plot.vGWAS}}
 #' @references Shen, X., Pettersson, M., Ronnegard, L. and Carlborg, O.
 #' (2011): \bold{Inheritance beyond plain heritability:
 #' variance-controlling genes in \emph{Arabidopsis thaliana}}.
@@ -32,7 +33,7 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr)
+#' marker.map = map, chr.index = chr, pb = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
@@ -45,23 +46,23 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom graphics abline axis mtext plot points
 #' @export vGWAS.variance
-vGWAS.variance <-
-  function(phenotype, marker.genotype, print = TRUE)
-  {
+vGWAS.variance <- function(
+    phenotype,
+    marker.genotype,
+    print = TRUE) {
     # ----- check phenotype ----- #
-    if (!is.numeric(phenotype))
-    {
-      stop('phenotype has to be numeric.')
+    if (!is.numeric(phenotype)) {
+        stop('phenotype has to be numeric.')
     }
     # ----- check marker genotype ----- #
-    if (!is.numeric(marker.genotype) & !is.character(marker.genotype) & !is.factor(marker.genotype))
-    {
-      stop('marker genotype has a wrong format.')
+    if (!is.numeric(marker.genotype) &
+        !is.character(marker.genotype) &
+        !is.factor(marker.genotype)) {
+        stop('marker genotype has a wrong format.')
     }
     # ----- check if data sizes match ----- #
-    if (length(phenotype) != length(marker.genotype))
-    {
-      stop('size of phenotype and marker genotype do not match.')
+    if (length(phenotype) != length(marker.genotype)) {
+        stop('size of phenotype and marker genotype do not match.')
     }
     #dm <- dglm(phenotype ~ as.factor(marker.genotype), ~ as.factor(marker.genotype))
     #df.fd <- length(levels(as.factor(marker.genotype))) - 1
@@ -81,7 +82,9 @@ vGWAS.variance <-
     #heritability.disp <- heritability.disp0*(1 - heritability.mean)
     tab <- table(marker.genotype)
     genos <- names(tab)
-    if (length(genos) != 2) stop('Incorrect number of genotypes for calculating variance explained.')
+    if (length(genos) != 2) {
+        stop('Incorrect number of genotypes for calculating variance explained.')
+    }
     y1 <- phenotype[marker.genotype == genos[1]]
     y2 <- phenotype[marker.genotype == genos[2]]
     mu1 <- mean(y1)
@@ -94,15 +97,15 @@ vGWAS.variance <-
     vv <- p*(1 - p)*(s1 - s2)**2
     ve <- (p*s1 + (1 - p)*s2)**2
     if (print) {
-      cat('variance explained by the mean part of model:\n')
-      cat(round(vm/vp*100, digits = 2), '%\n')
-      #cat(round(vm*100, digits = 2), '%, p-value =', p.mean, '\n')
-      cat('variance explained by the variance part of model:\n')
-      cat(round(vv/vp*100, digits = 2), '%\n')
-      #cat(round(vv*100, digits = 2), '%, p-value =', p.disp, '\n')
-      cat('variance explained in total:\n')
-      cat(round((vm + vv)/vp*100, digits = 2), '%\n')
+        cat('variance explained by the mean part of model:\n')
+        cat(round(vm/vp*100, digits = 2), '%\n')
+        #cat(round(vm*100, digits = 2), '%, p-value =', p.mean, '\n')
+        cat('variance explained by the variance part of model:\n')
+        cat(round(vv/vp*100, digits = 2), '%\n')
+        #cat(round(vv*100, digits = 2), '%, p-value =', p.disp, '\n')
+        cat('variance explained in total:\n')
+        cat(round((vm + vv)/vp*100, digits = 2), '%\n')
     }
     return(list(vm = vm, vv = vv, ve = ve, vp = vp))
     #p.mean = p.mean, p.variance = p.disp, LRT.statistic.variance = LRT, df.variance = df.fd
-  }
+}

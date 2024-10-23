@@ -5,8 +5,10 @@
 \alias{chr-data}
 \alias{chr}
 \title{Chromosome Indices for The Markers of The Simulated Data}
-\format{A numeric vector of chromosome indices for the 20K
-simulated markers.}
+\format{
+A numeric vector of chromosome indices for the 20K
+simulated markers.
+}
 \usage{
 data(chr)
 }

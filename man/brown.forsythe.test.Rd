@@ -43,11 +43,15 @@ data(geno)
 brown.forsythe.test(pheno, geno[,911])
 }
 \references{
-Brown, M. B. and Forsythe, A.B. (1974). \bold{Robust tests for equality of
-variances.} \emph{Journal of the American Statistical Association}, \bold{69}, 364-367.\cr
+Brown, M. B. and Forsythe, A.B. (1974). \bold{Robust tests for
+equality of variances.}
+\emph{Journal of the American Statistical Association},
+\bold{69}, 364-367.\cr
 
-Levene, H. (1960). \bold{Robust Tests for Equality of Variances}, \emph{in Contributions
-to Probability and Statistics}, ed. I. Olkin, Palo Alto, CA: Stanford Univ. Press.\cr
+Levene, H. (1960).
+\bold{Robust Tests for Equality of Variances}, \emph{in Contributions
+to Probability and Statistics}, ed. I. Olkin, Palo Alto, CA: Stanford Univ.
+Press.\cr
 }
 \author{
 Xia Shen

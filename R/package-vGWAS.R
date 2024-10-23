@@ -1,7 +1,7 @@
 #' @title Variance Heterogeneity Genome-wide Association Study
 #' @description The package provides models and tests for variance
 #' heterogeneity genome-wide association study (vGWAS).
-#' @docType package
+#' "_PACKAGE"
 #' @name package-vGWAS
 #' @author Xia Shen
 #' @references Shen, X., Pettersson, M., Ronnegard, L. and Carlborg, O.
@@ -18,6 +18,6 @@
 #' of Variances}, \emph{in Contributions to Probability and Statistics},
 #' ed. I. Olkin, Palo Alto, CA: Stanford Univ. Press.\cr
 #' @seealso R package \code{lawstat} for other types of nonparametric
-#' variance tests.
+#' variance tests and \code{onewaystats}.
 #' @keywords GWAS
 NULL
