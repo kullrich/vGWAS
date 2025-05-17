@@ -3,9 +3,10 @@
 #' @aliases vGWASparallel
 #' @description Variance Genome-wide association for using
 #' nonparametric variance test and other
-#' @usage vGWASparallel(phenotype, geno.matrix, geno.snp = "row",
-#' marker.map = NULL, chr.index = NULL, method = "bfmedian",
-#' p.adjust.method = "none", include.het = FALSE, pB = TRUE, ncores = 1)
+#' @usage vGWASparallel(phenotype, geno.matrix, marker.map = NULL,
+#' chr.index = NULL, geno.snp = "row", method = "bfmedian", test.alpha = 0.05,
+#' test.na.rm = TRUE, p.adjust.method = "none", include.het = FALSE, pB = TRUE,
+#' ncores = 1)
 #' @param phenotype a \code{numeric} or \code{logical} vector
 #' of the phenotyic values.
 #' @param geno.matrix a \code{matrix} or \code{data.frame} or
@@ -54,7 +55,7 @@
 #' ("welch"),
 #' Weerahandi's generalized F test ("wgf"),
 #' Welch's t-test ("wt").
-#' @param test.alpa the level of significance to assess the statistical
+#' @param test.alpha the level of significance to assess the statistical
 #' difference. Default is set to alpha = 0.05.
 #' @param test.na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds. Default us set to TRUE.
@@ -85,15 +86,15 @@
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWASparallel(phenotype = pheno, geno.matrix = geno,
 #' marker.map = map, chr.index = chr,
-#' geno.snp = "col", pb = FALSE)
+#' geno.snp = "col", pB = FALSE)
 #' # ----- other test GWA scan ----- #
 #' vgwa.mw <- vGWASparallel(phenotype = pheno, geno.matrix = geno,
 #' marker.map = map, chr.index = chr,
-#' geno.snp = "col", method = "mw", pb = FALSE)
+#' geno.snp = "col", method = "mw", pB = FALSE)
 #' # ----- multiple cores ----- #
 #' vgwa.st <- vGWASparallel(phenotype = pheno, geno.matrix = geno,
 #' marker.map = map, chr.index = chr,
-#' geno.snp = "col", method = "st", ncores = 2, pb = FALSE)
+#' geno.snp = "col", method = "st", ncores = 2, pB = FALSE)
 #' @importFrom stats anova lm median pchisq ppoints qchisq sd p.adjust
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom graphics abline axis mtext plot points
@@ -174,7 +175,7 @@ vGWASparallel <- function(
     }
     # ----- scan -----#
     if (ncores > 1) {
-        if(.Platform$OS.type == "windows"){
+        if(.Platform[["OS.type"]] == "windows"){
             cl <- parallel::makeCluster(ncores)
         } else {
             cl <- parallel::makeForkCluster(ncores)
@@ -182,6 +183,7 @@ vGWASparallel <- function(
         chunk_indices <- split(seq(from = 1, to = m),
                                cut(seq(from = 1, to = m), ncores))
         doParallel::registerDoParallel(cl)
+        batch <- NULL
         results <- foreach::foreach(batch = chunk_indices,
                                     .combine = 'rbind') %dopar% {
             local_p_values <- numeric(length(batch))
@@ -407,10 +409,10 @@ vGWASparallel <- function(
             }
             # Store the results
             if (!inherits(test, 'try-error')) {
-                local_p_values[j] <- ifelse(is.na(test$p.value), 1,
-                                            test$p.value)
-                local_statistics[j] <- ifelse(is.na(test$statistic), 0,
-                                              test$statistic)
+                local_p_values[j] <- ifelse(is.na(test[["p.value"]]), 1,
+                                            test[["p.value"]])
+                local_statistics[j] <- ifelse(is.na(test[["statistic"]]), 0,
+                                              test[["statistic"]])
             } else {
                 local_p_values[j] <- 1
                 local_statistics[j] <- 0
@@ -420,9 +422,15 @@ vGWASparallel <- function(
         return(data.frame(p.values = local_p_values,
                           statistics = local_statistics, indices = batch))
       }
+      if (!methods::is(results, "data.frame")) {
+          stop("Parallel foreach output is not a data.frame.")
+      }
       # Collect results from all batches
-      p.values <- unlist(results[["p.values"]][order(results[["indices"]])])
-      statistics <- unlist(results[["statistics"]][order(results[["indices"]])])
+      ordered_indices <- order(results[["indices"]])
+      p.values <- unlist(results[ordered_indices, "p.values", drop = FALSE])
+      statistics <- unlist(results[ordered_indices, "statistics", drop = FALSE])
+      #p.values <- unlist(results[["p.values"]][order(results[["indices"]])])
+      #statistics <- unlist(results[["statistics"]][order(results[["indices"]])])
       parallel::stopCluster(cl)
     } else {
         for (j in 1:m) {
@@ -638,9 +646,10 @@ vGWASparallel <- function(
                 stop('Wrong test method.')
             }
             if (!inherits(test, 'try-error')) {
-                p.values[j] <- ifelse(is.na(test$p.value), 1, test$p.value)
-                statistics[j] <- ifelse(is.na(test$statistic), 0,
-                                        test$statistic)
+                p.values[j] <- ifelse(is.na(test[["p.value"]]), 1,
+                    test[["p.value"]])
+                statistics[j] <- ifelse(is.na(test[["statistic"]]), 0,
+                    test[["statistic"]])
             } else {
                 p.values[j] <- 1
                 statistics[j] <- 0

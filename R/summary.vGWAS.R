@@ -29,13 +29,13 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr, pb = FALSE)
+#' marker.map = map, chr.index = chr, pB = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
 #' # ----- calculate the variance explained by the strongest marker ----- #
 #' vGWAS.variance(phenotype = pheno,
-#' marker.genotype = geno[,vgwa$p.value == min(vgwa$p.value)])
+#' marker.genotype = geno[, vgwa[["p.value"]] == min(vgwa[["p.value"]])])
 #' # ----- genomic control ----- #
 #' vgwa2 <- vGWAS.gc(vgwa)
 #' plot(vgwa2)
@@ -50,15 +50,16 @@ summary.vGWAS <- function(
     object,
     nrMarkers = 10,
     ...) {
-    if(!class(object) == "vGWAS"){
+    if (!inherits(object, "vGWAS")) {
         stop("data has to be of class: vGWAS")
     }
-    pSort <- sort(object$p.value, index.return=T)
-    topMarkers <- pSort$ix[1:nrMarkers]
-    Pval <- object$p.value[topMarkers]
-    chr <- object$chromosome[topMarkers]
-    marker <- object$marker[topMarkers]
-    map <- object$marker.map[topMarkers]
+    nrMarkers <- min(nrMarkers, length(object[["p.value"]]))
+    pSort <- sort(object[["p.value"]], index.return=TRUE)
+    topMarkers <- pSort[["ix"]][1:nrMarkers]
+    Pval <- object[["p.value"]][topMarkers]
+    chr <- object[["chromosome"]][topMarkers]
+    marker <- object[["marker"]][topMarkers]
+    map <- object[["marker.map"]][topMarkers]
     result <- data.frame(marker, chr, map, Pval)
     print(paste("Top ", nrMarkers,
         " markers, sorted by p-value:", sep=""), quote=F)

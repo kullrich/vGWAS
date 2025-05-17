@@ -64,7 +64,7 @@ plot(vgwa)
 
 ## -----------------------------------------------------------------------------
 # get marker with lowest p.value
-marker.lowest <- vgwa$p.value == min(vgwa$p.value)
+marker.lowest <- vgwa[["p.value"]] == min(vgwa[["p.value"]])
 vGWAS.variance(
   phenotype = pheno,
   marker.genotype = geno[, marker.lowest])

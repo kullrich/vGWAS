@@ -2,10 +2,10 @@
 % Please edit documentation in R/bfmedian.test.R
 \name{bfmedian.test}
 \alias{bfmedian.test}
-\alias{brown.forsythe.test}
 \title{Brown-Forsythe's Test of Equality of Variances}
 \usage{
-bfmedian.test(y, group)
+bfmedian.test(formula, data, alpha = 0.05, na.rm = TRUE,
+verbose = TRUE)
 }
 \arguments{
 \item{formula}{a formula of the form lhs ~ rhs where lhs gives the sample

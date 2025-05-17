@@ -1,9 +1,10 @@
 #' @title Brown-Forsythe's Test of Equality of Variances
 #' @name bfmedian.test
-#' @aliases brown.forsythe.test
+#' @aliases bfmedian.test
 #' @description The function performs the robust Brown-Forsythe
 #' test using the group medians.
-#' @usage bfmedian.test(y, group)
+#' @usage bfmedian.test(formula, data, alpha = 0.05, na.rm = TRUE,
+#' verbose = TRUE)
 #' @details Levene (1960) proposed a test for homogeneity of variances
 #' in \emph{k} groups which is based on the ANOVA statistic applied to
 #' absolute deviations of observations from the corresponding group mean.
@@ -45,7 +46,8 @@
 #' @export bfmedian.test
 #' @author Kristian Ullrich
 #' @keywords htest
-#' @importFrom stats anova lm median pchisq ppoints qchisq sd
+#' @importFrom methods is
+#' @importFrom stats anova lm median pchisq ppoints qchisq sd complete.cases model.frame
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom graphics abline axis mtext plot points
 bfmedian.test <- function (
@@ -111,13 +113,13 @@ bfmedian.test <- function (
             "\n\n", sep = " ")
     }
     result <- list()
-    result$statistic <- Ftest
-    result$parameter <- c(df1, df2)
-    result$p.value <- p.value
-    result$alpha <- alpha
-    result$method <- METHOD
-    result$data <- data
-    result$formula <- formula
+    result[["statistic"]] <- Ftest
+    result[["parameter"]] <- c(df1, df2)
+    result[["p.value"]] <- p.value
+    result[["alpha"]] <- alpha
+    result[["method"]] <- METHOD
+    result[["data"]] <- data
+    result[["formula"]] <- formula
     attr(result, "class") <- "owt"
     invisible(result)
 }

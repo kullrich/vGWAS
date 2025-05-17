@@ -35,13 +35,13 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr, pb = FALSE)
+#' marker.map = map, chr.index = chr, pB = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
 #' # ----- calculate the variance explained by the strongest marker ----- #
 #' vGWAS.variance(phenotype = pheno,
-#' marker.genotype = geno[,vgwa$p.value == min(vgwa$p.value)])
+#' marker.genotype = geno[, vgwa[["p.value"]] == min(vgwa[["p.value"]])])
 #' # ----- genomic control ----- #
 #' vgwa2 <- vGWAS.gc(vgwa)
 #' plot(vgwa2)
@@ -61,22 +61,22 @@ plot.vGWAS <- function(
     col.manhattan = c('slateblue4', 'olivedrab'),
     col.sig.threshold = 'darkgoldenrod',
     ...) {
-    tab.chr <- table(x$chromosome)
+    tab.chr <- table(x[["chromosome"]])
     chr <- as.numeric(names(tab.chr))
     ends <- cumsum(tab.chr)
-    cumpos <- numeric(length(x$marker.map))
-    cumpos[1:ends[1]] <- x$marker.map[1:ends[1]]
-    logp <- -log(x$p.value, 10)
+    cumpos <- numeric(length(x[["marker.map"]]))
+    cumpos[1:ends[1]] <- x[["marker.map"]][1:ends[1]]
+    logp <- -log(x[["p.value"]], 10)
     if (length(chr) > 1) {
       for (i in 2:length(chr)) {
         cumpos[(ends[i - 1] + 1):ends[i]] <- cumpos[ends[i - 1]] +
-          x$marker.map[(ends[i - 1] + 1):ends[i]]
+          x[["marker.map"]][(ends[i - 1] + 1):ends[i]]
       }
     }
     if (is.null(sig.threshold)) {
-      sig.threshold <- -log(.05/length(x$marker.map), 10)
+      sig.threshold <- -log(.05/length(x[["marker.map"]]), 10)
       cat('nominal significance threshold with Bonferroni correction for',
-          length(x$marker.map), 'tests are calculated.\n')
+          length(x[["marker.map"]]), 'tests are calculated.\n')
     }
     cutp <- logp > low.log.p
     plot(cumpos, logp, type = 'n', ann = FALSE, axes = FALSE)

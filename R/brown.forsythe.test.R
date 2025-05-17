@@ -74,8 +74,8 @@ brown.forsythe.test <- function(
     # ----- if the Kruskal-Wallis test is used ----- #
         METHOD <- paste('Rank-based (Kruskal-Wallis)', METHOD)
         ktest <- kruskal.test(resp.mean,d)
-        statistic <- ktest$statistic
-        p.value <- ktest$p.value
+        statistic <- ktest[["statistic"]]
+        p.value <- ktest[["p.value"]]
     }
     # ----- display output ----- #
     STATISTIC <- statistic

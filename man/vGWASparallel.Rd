@@ -4,9 +4,10 @@
 \alias{vGWASparallel}
 \title{Variance Genome-wide Association (parallel)}
 \usage{
-vGWASparallel(phenotype, geno.matrix, geno.snp = "row",
-marker.map = NULL, chr.index = NULL, method = "bfmedian",
-p.adjust.method = "none", include.het = FALSE, pB = TRUE, ncores = 1)
+vGWASparallel(phenotype, geno.matrix, marker.map = NULL,
+chr.index = NULL, geno.snp = "row", method = "bfmedian", test.alpha = 0.05,
+test.na.rm = TRUE, p.adjust.method = "none", include.het = FALSE, pB = TRUE,
+ncores = 1)
 }
 \arguments{
 \item{phenotype}{a \code{numeric} or \code{logical} vector
@@ -63,6 +64,9 @@ Welch's heteroscedastic F test with trimmed means and Winsorized variances
 Weerahandi's generalized F test ("wgf"),
 Welch's t-test ("wt").}
 
+\item{test.alpha}{the level of significance to assess the statistical
+difference. Default is set to alpha = 0.05.}
+
 \item{test.na.rm}{a logical value indicating whether NA values should be
 stripped before the computation proceeds. Default us set to TRUE.}
 
@@ -76,9 +80,6 @@ equally to homozygous ref and alt counts (default = FALSE)}
 \item{pB}{show progress bar}
 
 \item{ncores}{number of cores to parallelize (default = 1)}
-
-\item{test.alpa}{the level of significance to assess the statistical
-difference. Default is set to alpha = 0.05.}
 }
 \value{
 a \code{data.frame} containing columns of \code{marker} names,
@@ -98,15 +99,15 @@ data(map)
 # ----- variance GWA scan ----- #
 vgwa <- vGWASparallel(phenotype = pheno, geno.matrix = geno,
 marker.map = map, chr.index = chr,
-geno.snp = "col", pb = FALSE)
+geno.snp = "col", pB = FALSE)
 # ----- other test GWA scan ----- #
 vgwa.mw <- vGWASparallel(phenotype = pheno, geno.matrix = geno,
 marker.map = map, chr.index = chr,
-geno.snp = "col", method = "mw", pb = FALSE)
+geno.snp = "col", method = "mw", pB = FALSE)
 # ----- multiple cores ----- #
 vgwa.st <- vGWASparallel(phenotype = pheno, geno.matrix = geno,
 marker.map = map, chr.index = chr,
-geno.snp = "col", method = "st", ncores = 2, pb = FALSE)
+geno.snp = "col", method = "st", ncores = 2, pB = FALSE)
 }
 \references{
 Shen, X., Pettersson, M., Ronnegard, L. and Carlborg, O.

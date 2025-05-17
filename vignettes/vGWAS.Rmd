@@ -136,7 +136,7 @@ which produces Figure 2. There is a clear peak above the Bonferroni corrected th
 Regarding the marker that gave the highest score, the heritability explained by the mean and variance can be split and calculated via:
 ```{r}
 # get marker with lowest p.value
-marker.lowest <- vgwa$p.value == min(vgwa$p.value)
+marker.lowest <- vgwa[["p.value"]] == min(vgwa[["p.value"]])
 vGWAS.variance(
   phenotype = pheno,
   marker.genotype = geno[, marker.lowest])

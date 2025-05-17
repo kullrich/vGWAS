@@ -33,13 +33,13 @@
 #' data(map)
 #' # ----- variance GWA scan ----- #
 #' vgwa <- vGWAS(phenotype = pheno, geno.matrix = geno,
-#' marker.map = map, chr.index = chr, pb = FALSE)
+#' marker.map = map, chr.index = chr, pB = FALSE)
 #' # ----- visualize the scan ----- #
 #' plot(vgwa)
 #' summary(vgwa)
 #' # ----- calculate the variance explained by the strongest marker ----- #
 #' vGWAS.variance(phenotype = pheno,
-#' marker.genotype = geno[,vgwa$p.value == min(vgwa$p.value)])
+#' marker.genotype = geno[, vgwa[["p.value"]] == min(vgwa[["p.value"]])])
 #' }
 #' @author Xia Shen
 #' @importFrom stats anova lm median pchisq ppoints qchisq sd

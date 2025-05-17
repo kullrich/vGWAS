@@ -22,12 +22,14 @@
 #' data(geno.sparse)
 #' maf.sparse <- getMAF(geno.matrix = geno.sparse, geno.snp = "row")
 #' @importFrom Matrix colSums rowSums
+#' @importFrom methods is
 #' @author Kristian Ullrich
 #' @export getMAF
 getMAF<- function(
     geno.matrix,
     geno.snp = "row",
     include.het = FALSE) {
+    options(scipen = 22)
     # Internal functions
     getMAFnum <- function(snps_bin, include.het = FALSE) {
         # Tabulates values 0, 1, 2
@@ -48,22 +50,21 @@ getMAF<- function(
         return(site_maf)
     }
     # Check if geno.matrix is a matrix or a data frame
-    if (!is.matrix(geno.matrix) &
-        !is.data.frame(geno.matrix) &
-        !is(geno.matrix, 'sparseMatrix')) {
+    if (!methods::is(geno.matrix, 'matrix') &
+        !methods::is(geno.matrix, 'data.frame') &
+        !methods::is(geno.matrix, 'sparseMatrix')) {
         stop('geno.matrix has to be a matrix or a data frame or
              a sparse matrix.')
     }
-    options(scipen = 22)
-    if (is(geno.matrix, 'sparseMatrix')) {
+    if (methods::is(geno.matrix, 'sparseMatrix')) {
         if (geno.snp == "row") {
-            g0 <- Matrix::rowSums(geno.sparse == 0)  # Homozygous 0 count
-            g1 <- Matrix::rowSums(geno.sparse == 1)  # Heterozygous 1 count
-            g2 <- Matrix::rowSums(geno.sparse == 2)  # Homozygous 2 count
+            g0 <- Matrix::rowSums(geno.matrix == 0)  # Homozygous 0 count
+            g1 <- Matrix::rowSums(geno.matrix == 1)  # Heterozygous 1 count
+            g2 <- Matrix::rowSums(geno.matrix == 2)  # Homozygous 2 count
         } else {
-            g0 <- Matrix::colums(geno.sparse == 0)  # Homozygous 0 count
-            g1 <- Matrix::colSums(geno.sparse == 1)  # Heterozygous 1 count
-            g2 <- Matrix::colSums(geno.sparse == 2)  # Homozygous 2 count
+            g0 <- Matrix::colSums(geno.matrix == 0)  # Homozygous 0 count
+            g1 <- Matrix::colSums(geno.matrix == 1)  # Heterozygous 1 count
+            g2 <- Matrix::colSums(geno.matrix == 2)  # Homozygous 2 count
         }
         if (include.het) {
             g0 <- g0 + g1
@@ -71,7 +72,7 @@ getMAF<- function(
         }
         # Calculate MAF
         maf <- pmin(g0, g2) / (g0 + g2)
-    } else if (is.matrix(geno.matrix)) {
+    } else if (methods::is(geno.matrix, 'matrix')) {
         if (all(is.character(geno.matrix))) {
             if (geno.snp == "row") {
                 maf <- apply(geno.matrix, 1, function(x) {
