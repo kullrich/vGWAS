@@ -1,7 +1,7 @@
 Package: vGWAS
 Type: Package
 Title: Variance Heterogeneity Genome-wide Association Study - Reimplementation
-Version: 2025.05.17
+Version: 2025.05.18
 Author: Xia Shen
 Maintainer: Kristian Ullrich <ullrich@evolbio.mpg.de>
 Description: The package reimplementation provides models and tests for variance
@@ -26,5 +26,8 @@ Suggests:
   rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: yes
-URL: https://github.com/kullrich/vGWAS
+URL:
+  https://github.com/kullrich/vGWAS,
+  https://kullrich.github.io/vGWAS/
+BugReports: https://github.com/kullrich/vGWAS/issues
 RoxygenNote: 7.3.2

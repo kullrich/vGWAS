@@ -1,0 +1,23 @@
+citHeader("To cite CRBHits in publications, use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Inheritance Beyond Plain Heritability: Variance-Controlling Genes in Arabidopsis thaliana",
+  author   = personList(
+      as.person("Xia Shen"),
+      as.person("Mats Pettersson"),
+      as.person("Lars Rönnegård"),
+      as.person("Örjan Carlborg")
+  ),
+  journal  = "PLOS Genetics",
+  year     = "2012",
+  volume   = "8",
+  number   = "8",
+  url      = "https://doi.org/10.1371/journal.pgen.1002839",
+  doi      = "10.1371/journal.pgen.1002839",
+  textVersion = paste(
+      "Shen, X., Pettersson, M., Rönnegård, L., Carlborg, Ö.",
+      "Inheritance Beyond Plain Heritability: Variance-Controlling Genes in Arabidopsis thaliana.",
+      "PLOS Genetics, 8(8). (2012). https://doi.org/10.1371/journal.pgen.1002839"
+  )
+)

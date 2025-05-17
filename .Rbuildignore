@@ -6,3 +6,9 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^public$
+^\.gitlab-ci\.yml$
+^\.travis\.yml$
+CODE_OF_CONDUCT.md
+pkgdown/
+^\.github$

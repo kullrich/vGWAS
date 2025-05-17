@@ -3,6 +3,13 @@
 
 Variance Heterogeneity Genome-wide Association Study - Reimplementation
 =========
+
+R package source code: https://github.com/kullrich/vGWAS
+
+R package pages: https://kullrich.github.io/vGWAS/
+
+R package issues: https://github.com/kullrich/vGWAS/issues
+
 This repository is a reimplementation from the original `vGWAS` R package from [Xia Shen](https://github.com/xiashen).
 
 see the original publication
@@ -61,3 +68,12 @@ These vignettes introduce `vGWAS`
 
 - [01. vGWAS basic tutorial](https://github.com/kullrich/vGWAS/blob/master/vignettes/vGWAS.Rmd)
 - [02. vGWAS plink tutorial](https://github.com/kullrich/vGWAS/blob/master/vignettes/vGWASsparse.Rmd)
+
+
+## Code of Conduct - Participation guidelines
+
+This repository adhere to [Contributor Covenant](http://contributor-covenant.org) code of conduct for in any interactions you have within this project. (see [Code of Conduct](https://github.com/kullrich/CRBHits/-/blob/devel/CODE_OF_CONDUCT.md))
+
+See also the policy against sexualized discrimination, harassment and violence for the Max Planck Society [Code-of-Conduct](https://www.mpg.de/11961177/code-of-conduct-en.pdf).
+
+By contributing to this project, you agree to abide by its terms.
