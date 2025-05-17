@@ -1,0 +1,10 @@
+pandoc: '3.5'
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  vGWAS: vGWAS.html
+  vGWASsparse: vGWASsparse.html
+last_built: 2025-05-17T22:39Z
+urls:
+  reference: https://kullrich.github.io/vGWAS/reference
+  article: https://kullrich.github.io/vGWAS/articles
